@@ -54,9 +54,9 @@ class ProductController extends Controller
         $product->categories()->attach($dataCreate['category_ids']);
         $sizeArray = [];
         foreach($sizes as $size){
-            $sizeArray[] = ['size' => $size->size, 'quantity' => $size->quantity, 'product_id' => $product];
+            $sizeArray[] = ['size' => $size->size, 'quantity' => $size->quantity, 'product_id' => $product->id];
         }
-        $this->productDetail->insert($sizeArray);
+        $product->details()->insert($sizeArray);
         return redirect()->route('products.index')->with(['message' => 'Tạo sản phẩm thành công']);
 
     }

@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
-        'parent_id',
+        'parent_id'
     ];
 
     public function parent(){
@@ -21,11 +22,12 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function getParentNameAttribute(){
+    public  function getParentNameAttribute()
+    {
         return optional($this->parent)->name;
     }
 
     public function getParents(){
-        return Category::whereNull('parent_id')->get(['id', 'name']);
+        return Category::whereNull('parent_id')->with('childrens')->get(['id', 'name']);
     }
 }

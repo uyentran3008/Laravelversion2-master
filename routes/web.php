@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
 // use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +34,4 @@ Route::get('/home', function () {
     return view('client.layouts.app');
 });
 Route::resource('products', ProductController::class);
+Route::resource('categories', CategoryController::class);
