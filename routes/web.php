@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ProductController;
 // use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,7 @@ Route::get('/detail', function () {
 Route::get('/dashboard', function () {
     return view('admin.dashboard.index');
 });
+Route::get('/home', function () {
+    return view('client.layouts.app');
+});
+Route::resource('products', ProductController::class);

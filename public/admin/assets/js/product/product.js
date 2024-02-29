@@ -22,31 +22,97 @@ $(() => {
                 readURL(this);
             });
         
+//create products
+    renderSizes(sizes);
+    appendSizesToForm();
 
+    function renderSizes(sizes) {
+        for (let size of sizes) {
+            renderSize(size);
+        }
+    }
 
-            $(document).ready(function() {
-                // {{-- // Handle click event on "Add Size" button --}}
-                $('#add-size').click(function() {
-                    var sizeId = $('#size-dropdown').val();
-                    var sizeName = $('#size-dropdown option:selected').text();
-                    
-                    if (sizeId && sizeName) {
-                        var sizeRow = $('<div class="size-row"></div>');
-                        sizeRow.append('<label>'+'Size:' + sizeName + '</label>');
-                        sizeRow.append('<input type="number" name="sizes[' + sizeId + '][price]">');
-                        
-                        sizeRow.append('<button type="button" class="remove-size">Remove</button>');
-                        
-                        $('#sizes-container').append(sizeRow);
-                    }
-                });
-                
-                // Handle click event on "Remove" button
-                $(document).on('click', '.remove-size', function() {
-                    $(this).closest('.size-row').remove();
-                });
+    function getSizeIndex(sizes, id) {
+        let index = _.findIndex(sizes, function (o) {
+            return o.id == id;
+        });
+
+        return index;
+    }
+
+    function removeSize(sizes, id) {
+        let index = getSizeIndex(sizes, id);
+        if (index >= 0) {
+            $(`#product-size${sizes[index].id}`).remove();
+            sizes.splice(index, 1);
+        }
+    }
+
+    function addSize() {
+        let size = {
+            id: Date.now(),
+            size: "30",
+            quantity: 1,
+        };
+        sizes = [...sizes, size];
+        renderSize(size);
+    }
+        
+            function appendSizesToForm() {
+                $("#inputSize").val(JSON.stringify(sizes));
+            }
+        
+            $(document).on("click", ".btn-remove-size", function () {
+                let id = $(this).data("id");
+                removeSize(sizes, id);
+                appendSizesToForm();
             });
-   
+        
+            $(document).on("click", ".btn-add-size", function () {
+                addSize();
+                appendSizesToForm();
+            });
+        
+            $(document).on("keyup", ".input-size", function () {
+                let id = $(this).data("id");
+                let size = $(this).val();
+                let index = getSizeIndex(sizes, id);
+                console.log(1);
+                if (index >= 0) {
+                    sizes[index].size = size;
+                }
+                appendSizesToForm();
+            });
+        
+            function renderSize(size) {
+                let html = `<div class="product-item-size" id="product-size${size.id}">
+                                    <div class="row ">
+                                        <div class="input-group input-group-static col-5 w-40">
+                                            <label>Size</label>
+                                            <input value="${size.size}" type="text" class="form-control input-size" data-id="${size.id}">
+                                        </div>
+        
+                                        <div class="input-group input-group-static col-5 w-40">
+                                            <label>Quantity</label>
+                                            <input type="number" value="${size.quantity}" class="form-control input-quantity" data-id="${size.id}">
+                                        </div>
+                                        <div class="w-20">
+                                            <button type="button" class="btn btn-danger btn-remove-size" data-id="${size.id}">X</button>
+                                        </div>
+                                    </div>`;
+                $("#AddSizeModalBody").append(html);
+            }
+        
+            $(document).on("keyup", ".input-quantity", function () {
+                let id = $(this).data("id");
+                let quantity = $(this).val();
+                let index = getSizeIndex(sizes, id);
+        
+                if (index >= 0) {
+                    sizes[index].quantity = quantity;
+                }
+            });
+        
             
         
 });
