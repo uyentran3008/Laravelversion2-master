@@ -23,7 +23,7 @@
             @foreach ($products as $item)
             <tr>
                 <td>{{ $item->id}}</td>
-                <td><img src="{{ $item->images->count() > 0 ? asset('upload/' .$item->images->first()->url) : 'upload/default.jpg'}}"
+                <td><img src="{{ $item->images->count() > 0 ? asset('upload/' .$item->images->first()->url) : ''}}"
                         width="200px" height="200px" alt=""></td>
 
                 <td>{{ $item->name}}</td>

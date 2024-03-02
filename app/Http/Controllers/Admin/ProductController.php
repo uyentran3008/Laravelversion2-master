@@ -84,9 +84,27 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $dataUpdate = $request->except('sizes');
+        $sizes = $request->sizes ? json_decode($request->sizes) : [];
+        $product = $this->product->findOrFail($id);
+        $currentImage =  $product->images ? $product->images->first()->url : '';
+        $dataUpdate['image'] = $this->product->updateImage($request, $currentImage);
+
+        $product->update($dataUpdate);
+
+        // $product->images()->create(['url' => $dataUpdate['image']]);
+        $product->assignCategory($dataUpdate['category_ids']);
+        $sizeArray = [];
+        foreach($sizes as $size)
+        {
+            $sizeArray[] = ['size' => $size->size, 'quantity' => $size->quantity, 'product_id' => $product->id];
+        }
+        $product->details()->insert($sizeArray);
+        return redirect()->route('products.index')->with(['message' => 'Update product success']);
+
     }
 
+  
     /**
      * Remove the specified resource from storage.
      */
